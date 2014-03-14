@@ -1,25 +1,5 @@
 recruiter
 =========
+![semaphore status](https://semaphoreapp.com/api/v1/projects/c0e8f1b6-1e26-4e09-b904-2018e554e954/146810/shields_badge.png "semaphore status")
 
 Online recruitment software for economics experiments written with rails
-
-### Ruby version
-
-    $ ruby -v
-    ruby 2.0.0p247 (2013-06-27 revision 41674) [x86_64-darwin12.4.0]
-    $ rails -v
-    Rails 4.0.0
-
-### System dependencies
-
-### Configuration
-
-### Database creation
-
-### Database initialization
-
-### How to run the test suite
-
-### Services (job queues, cache servers, search engines, etc.)
-
-### Deployment instructions

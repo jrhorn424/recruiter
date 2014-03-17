@@ -1,0 +1,30 @@
+.page-header
+  = link_to new_experiment_path, :class => 'btn btn-primary' do
+    span.glyphicon.glyphicon-plus
+    |  New Experiment
+  h1
+    | Listing experiments
+
+.table-responsive
+  table.table.table-condensed.table-borderless.table-hover
+    thead
+      tr
+        th
+          | Name
+        th
+          | Type
+        th
+          | Assigned
+        th
+    tbody
+      - @experiments.each do | experiment |
+        tr id="experiment_#{experiment.id}"
+          td data-href = "#{experiment_path(experiment)}"
+            = experiment.name
+          td data-href = "#{experiment_path(experiment)}"
+            = experiment.type
+          td data-href = "#{experiment_path(experiment)}"
+            = experiment.subjects.count
+          td
+            .btn-group.pull-right
+              = link_to 'Remove', experiment.becomes(Experiment), remote: true, method: :delete, :class => 'btn btn-xs btn-danger remove-link', data: { confirm: 'Are you sure?' }

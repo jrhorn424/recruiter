@@ -1,4 +1,5 @@
 Recruiter::Application.routes.draw do
+
   if Rails.env.development?
     mount MailPreview => 'mail_view'
   end
@@ -6,9 +7,11 @@ Recruiter::Application.routes.draw do
   # user accounts and profiles
   devise_for :users
 
-  resources :users, only: :none do
-    resource :profile
+  resources :sessions
+  resources :experiments do
+    resources :sessions
   end
+  resource :profile
 
   # static page overrides for CMS
   get 'help',      to: 'pages#help'

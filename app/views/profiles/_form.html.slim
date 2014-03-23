@@ -1,6 +1,6 @@
-= form_for(@profile, url: profile_path) do |f|
+= form_for(@profile, url: profile_path, method: :patch, html: { :class => "form-horizontal" }) do |f|
   = render "shared/errors"
-  div.form-horizontal role='form'
+  div
     fieldset
       legend Personal information
       div.form-group class=field_class(@profile, :first_name)
@@ -31,17 +31,15 @@
       div.form-group
         = f.label :ethnicity, class: 'control-label col-sm-2'
         div.col-sm-8
-          = f.select :ethnicity, options_for_select(%w[White Black Asian Hispanic Other], @profile.ethnicity),
+          = f.select :ethnicity, options_for_select(Ethnicity.all.pluck(:name), @profile.ethnicity),
             prompt: 'Choose...',
             class: 'form-control'
       div.form-group
         = f.label :profession, class: 'control-label col-sm-2'
         div.col-sm-8
-          = f.text_field :profession,
+          = f.select :profession, options_for_select(Profession.all.pluck(:name), @profile.profession),
+            prompt: 'Choose...',
             class: 'form-control'
-          span.help-block
-            | How do you usually answer the question, "What do you do for a
-            |  living?"
       div.form-group
         = f.label :years_resident, class: 'control-label col-sm-2'
         div.col-sm-8
@@ -54,7 +52,7 @@
       div.form-group
         = f.label :class_year, class: 'control-label col-sm-2'
         div.col-sm-8
-          = f.select :class_year, options_for_select(%w[Freshman Sophomore Junior Senior] << 'Graduate Student', @profile.class_year),
+          = f.select :class_year, options_from_collection_for_select(ClassYear.all, 'year', 'name', @profile.class_year),
             prompt: 'Choose...',
             class: 'form-control'
           span.help-block Your class year, according to your transcript.
@@ -73,7 +71,7 @@
       div.form-group
         = f.label :major, class: 'control-label col-sm-2'
         div.col-sm-8
-          = f.select :major, options_for_select(%w[Economics Psychology Science/Engineering Math Other], @profile.major),
+          = f.select :major, options_for_select(Major.all.pluck(:name), @profile.major),
             prompt: 'Choose...',
             class: 'form-control'
     fieldset
@@ -94,4 +92,5 @@
             class: 'form-control',
             maxlength: 14,
             data: { mask: '(999) 999-9999' }
-    div= f.button 'Save', :type => 'submit', :class => 'btn btn-small btn-primary'
+    .pull-right
+      = f.button 'Save', :type => 'submit', :class => 'btn btn-small btn-primary'

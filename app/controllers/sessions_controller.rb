@@ -1,13 +1,13 @@
 class SessionsController < InheritedResources::Base
   belongs_to :experiment
   respond_to :js, :only => :destroy
-  actions :index, :show, :update, :create, :new, :destroy, :edit
+  actions :index, :edit, :show, :update, :create, :new, :destroy
 
   def update
-    update! { experiment_path @session.experiment}
+    update! { experiment_path @session.experiment }
   end
   def create
-    create! { experiment_path @session.experiment}
+    create! { experiment_path @session.experiment }
   end
   def destroy
     @session_id = params[:id]

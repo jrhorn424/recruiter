@@ -5,7 +5,7 @@ namespace :db do
       Rake::Task["db:drop"].execute
       Rake::Task["db:create"].execute
       Rake::Task["db:migrate"].execute
-      Rake::Task["db:seed"].execute
+      Rake::Task["db:seed_fu"].execute
     end
   end
 end

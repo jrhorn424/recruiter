@@ -82,6 +82,10 @@ gem 'authority'
 # Utilities
 ##
 
+# https://github.com/heroku/rails_12factor
+# needed for heroku deploys
+gem 'rails_12factor'
+
 # https://github.com/collectiveidea/delayed_job
 gem 'delayed_job'
 gem 'daemons' # required

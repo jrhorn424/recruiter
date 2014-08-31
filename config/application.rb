@@ -29,7 +29,7 @@ module Recruiter
     }
 
     # rewrites
-    config.middleware.insert_before(Rack::Lock, Rack::Rewrite) do
+    config.middleware.insert_before(Rack::Runtime, Rack::Rewrite) do
       r301 %r{.*}, 'http://ices-experiments.org$&',
         :if => Proc.new { |rack_env| rack_env['SERVER_NAME'] != 'ices-experiments.org' }
     end

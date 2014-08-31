@@ -190,3 +190,5 @@ group :linux do
   gem 'rb-inotify'
   gem 'libnotify'
 end
+
+gem 'rack-rewrite'

@@ -27,5 +27,10 @@ module Recruiter
     config.action_view.field_error_proc = Proc.new { |html_tag, instance|
       "<div class=\"has-error\">#{html_tag}</div>".html_safe
     }
+    # rewrites
+      config.middleware.insert_before(Rack::Lock, Rack::Rewrite) do
+        r301 %r{.*}, 'http://ices-experiments.org$&',
+          :if => Proc.new { |rack_env| rack_env['SERVER_NAME'] != 'ices-experiments.org' }
+      end
   end
 end

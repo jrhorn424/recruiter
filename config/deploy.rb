@@ -39,7 +39,7 @@ task :environment do
   when 'staging'
     set :domain, 'staging.ices-experiments.org'
   when 'production'
-    set :domain, 'ices-experiments.org'
+    set :domain, 'www.ices-experiments.org'
   end
 
   invoke :'chruby[ruby-2.0]'

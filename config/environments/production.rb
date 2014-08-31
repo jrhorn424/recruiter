@@ -78,8 +78,8 @@ Recruiter::Application.configure do
     domain: 'ices-recruiter.herokuapp.com',
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: ENV['MANDRILL_USERNAME'],
-    password: ENV['MANDRILL_APIKEY']
+    user_name: 'app24708484@heroku.com',
+    password: '78vNcOq61LpY4cJEYjaWOw'
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

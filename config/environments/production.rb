@@ -79,7 +79,7 @@ Recruiter::Application.configure do
     port:                 587,
     user_name:            ENV['MANDRILL_USERNAME'],
     password:             ENV['MANDRILL_APIKEY'],
-    domain:               "ices-experiments.org",
+    domain:               ENV['DOMAIN_FOR_MAIL'],
     authentication:       "plain",
     enable_starttls_auto: true,
   }

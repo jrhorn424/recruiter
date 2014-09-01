@@ -4,6 +4,9 @@ module ApplicationHelper
   def markdown_to_html(text)
     Kramdown::Document.new(text).to_html.html_safe
   end
+  def javascript(*files)
+    content_for(:head) { javascript_include_tag(*files) }
+  end
 
   def field_class(resource, field_name)
     if resource.errors[field_name]
@@ -34,7 +37,15 @@ module ApplicationHelper
     end
   end
   ###
-
+  def custom_range
+    {
+      "birth_year" => (Time.now.year - 80..Time.now.year - 14),
+      "years_resident" => (1..10),
+      "year_started" => ((Time.now.year.to_i - 10)..(Time.now.year.to_i)),
+      "current_gpa" => (0..4),
+      "attendance" => (0..100)
+    }
+  end
   # Show login forms anywhere.
   # see: http://pupeno.com/2010/08/29/show-a-devise-log-in-form-in-another-page/
   def resource_name

@@ -1,6 +1,6 @@
 #sessions-box
   .table-responsive
-    table.table.table-condensed.table-borderless.table-hover
+    table.table.table-condensed.table-borderless
       thead
         tr
           th
@@ -10,14 +10,19 @@
           th
       tbody
         - @experiment.sessions.each do | session |
-          tr id="session_#{session.id}"
-            td data-href = "#{experiment_session_path(@experiment, session)}"
-              = l session.start_time
-            td data-href = "#{experiment_session_path(@experiment, session)}"
-              = "#{session.subjects.count} / #{session.required_subjects}"
+          tr id="session_#{session.id}" class="#{session.finished ? '' : 'success'}"
             td
-              .btn-group.pull-right
-                = link_to 'Remove', experiment_session_path(@experiment, session), remote: true, method: :delete, :class => 'btn btn-xs btn-danger remove-link', data: { confirm: 'Are you sure?' }
+              = l session.start_time
+            td
+              = "#{session.users.count} / #{session.required_subjects}"
+            td
+              .pull-right
+                - if not session.finished
+                  = link_to '', session_online_path(session), class: 'glyphicon glyphicon-play green spacer-right-10 classic'
+                  = link_to '', experiment_session_path(@experiment, session), class: 'glyphicon glyphicon-pencil spacer-right-10 classic'
+                  = link_to '', experiment_session_path(@experiment, session), remote: true, method: :delete, class: 'glyphicon glyphicon-remove danger', data: { confirm: 'Are you sure?' }
 .pull-right
-  = link_to 'New session', new_experiment_session_path(@experiment), class: 'btn btn-default btn-xs btn-success'
+  = link_to new_experiment_session_path(@experiment), :class => 'btn btn-primary pull-right' do
+    span.glyphicon.glyphicon-plus
+    |  New Session
 .clearfix

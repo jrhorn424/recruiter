@@ -1,0 +1,30 @@
+.table-responsive
+  table.table.table-condensed.table-borderless
+    thead
+      tr
+        th
+          | User
+        th
+          | Sessions
+    tbody
+      - @experiment.users.each do | user |
+        - regs = user.registrations.where(session_id: @experiment.sessions)
+        - reg_current = regs.where(shown_up: nil).first
+        tr id="user_#{user.id}" class = "spacer-top-10"
+          td
+            = link_to user.name, user.becomes(User)
+            br
+            small
+              = user.email
+            br
+            small
+              = "#{user.age} #{user.gender}"
+          td
+            - regs.each do |registration|
+              - if not registration.shown_up.nil? then
+                - session_result = if registration.shown_up.nil? then '' else registration.shown_up ? 'success' : 'danger' end
+                div id="registration_#{registration.session_id}_#{registration.user_id}" class = "#{session_result}"
+                  = "#{l registration.session.start_time}"
+            = link_to '', experiment_user_path(@experiment, user), remote: true, method: :delete, class: 'spacer-left-10 glyphicon glyphicon-remove danger pull-right', data: { confirm: 'Are you sure?' }
+            = select_tag :register, options_from_collection_for_select(@experiment.sessions.where(finished: false), 'id', 'start_time_display', reg_current ? reg_current.session_id : nil), prompt: 'not registred yet', class: 'registration-selector selectpicker', data: {user: user.id, experiment: @experiment.id}
+  = link_to '< Back', :back, :class => 'pull-left btn btn-default spacer-top-10'

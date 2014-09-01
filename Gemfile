@@ -16,11 +16,17 @@ gem 'coffee-rails', '~> 4.0.0'
 # Backend
 ##
 
+# https://github.com/bernat/best_in_place
+gem 'best_in_place', :git => 'https://github.com/aaronchi/best_in_place.git'
+
 # http://unicorn.bogomips.org/
 gem 'unicorn', require: false, group: :production # server
 
 # https://bitbucket.org/ged/ruby-pg/wiki/Home
 gem 'pg' # datastore
+
+# https://github.com/drnic/composite_primary_keys
+gem 'composite_primary_keys'
 
 # https://github.com/josevalim/inherited_resources
 gem 'inherited_resources' # DRY controllers
@@ -37,9 +43,9 @@ gem 'friendly_id', '~> 5.0.0' # slugs
 # https://github.com/airblade/paper_trail
 gem 'paper_trail', '~> 3.0.0'
 
+
 # https://github.com/newrelic/rpm
 gem 'newrelic_rpm'
-
 # https://github.com/kch/rack-timeout
 gem 'rack-timeout'
 ##
@@ -81,10 +87,6 @@ gem 'authority'
 ##
 # Utilities
 ##
-
-# https://github.com/heroku/rails_12factor
-# needed for heroku deploys
-gem 'rails_12factor'
 
 # https://github.com/collectiveidea/delayed_job
 gem 'delayed_job'
@@ -162,5 +164,3 @@ group :linux do
   gem 'rb-inotify'
   gem 'libnotify'
 end
-
-gem 'rack-rewrite'

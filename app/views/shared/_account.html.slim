@@ -6,18 +6,17 @@ ul.nav.navbar-nav.navbar-right
           b.caret
         ul.dropdown-menu
           - if current_user.is_subject?
-            li= link_to 'Profile', profile_path
-          li
-            a href="#"
-              | View schedule
+            li= link_to 'Timeline', timeline_path
           - if current_user.is_experimenter?
             li= link_to 'Experiments', experiments_path
+          - if current_user.is_administrator?
+            li= link_to 'Users', users_path
+          - if current_user.is_administrator?
+            li= link_to 'Dictionaries', dictionaries_path
           li.divider
-          li= link_to 'Manage account',edit_user_registration_path
+          li= link_to 'My Account',edit_user_registration_path
+          li.divider
           li= link_to 'Sign out', destroy_user_session_path, method: :delete
-          li.divider
-          li= link_to 'Help', page_path('help')
   - else
-      li= link_to "Sign in", "#sign_in", "data-toggle" => "modal"
-      li= link_to "Register", "#sign_up", "data-toggle" => "modal"
-      li= nav_link 'Help', page_path('help')
+    li= link_to "Sign up", new_user_registration_path
+    li= nav_link 'Help', page_path('help')

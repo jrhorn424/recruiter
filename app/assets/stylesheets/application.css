@@ -8,8 +8,85 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require_tree .
  *= require_self
  *= require jquery.ui.all
+ *= require_tree .
  */
+.danger{
+    color: darkred !important;
+}
+div.success{
+    color: darkgreen;
+}
+div.green{
+    color: darkgreen;
+}
+.classic{
+    color: darkgoldenrod;
+}
+.underline{
+    text-decoration: underline;
+}
+.line-separator{
+    height:1px;
+    background:#717171;
+    border-bottom:1px solid #313030;
+}
 
+.width-100{
+    width: 100%;
+}
+.spacer-right-10{
+    margin-right: 10px;
+}
+.spacer-left-10{
+    margin-left: 10px;
+}
+.spacer-top-5{
+    margin-top: 10px;
+}
+.spacer-top-10{
+    margin-top: 10px;
+}
+.spacer-bot-neg-5{
+    margin-bottom: -5px;
+}
+.spacer-bot-10{
+    margin-bottom: 10px;
+}
+.spacer-bot-15{
+    margin-bottom: 15px;
+}
+.spacer-top-20{
+    margin-top: 20px;
+}
+.spacer-top-100{
+    margin-top: 100px;
+}
+.vbottom {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+}
+input[type=radio] {
+    display: none;
+}
+input[type=radio] + label:before {
+    content: "";
+    display: inline-block;
+
+    width:14px;
+    height:14px;
+
+    margin-top: 2px;
+    margin-right: 4px;
+
+    line-height: 14px;
+
+    vertical-align: text-top;
+    background:url(icons-rb.png) left top no-repeat;
+    cursor:pointer;
+}
+input[type=radio]:checked + label:before {
+    background:url(icons-rb.png) -24px top no-repeat;
+}

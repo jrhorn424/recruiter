@@ -95,7 +95,7 @@ gem 'authority'
 ##
 
 ##
-# Utitlities
+# Utilities
 ##
 
 # https://github.com/collectiveidea/delayed_job
@@ -124,12 +124,6 @@ gem 'mail_view'
 ##
 
 group :development do
-  # http://nadarei.co/mina/
-  gem 'mina',     github: "nadarei/mina",  :require => false # deployment
-
-  # https://github.com/adie/mina-scp
-  gem 'mina-scp', github: "adie/mina-scp", :require => false
-
   # https://github.com/evrone/quiet_assets
   gem 'quiet_assets' # make logs a little more readable
 
@@ -163,7 +157,6 @@ group :development do
   gem 'railroady' # erd generator
 end
 
-
 group :development, :test do
   # https://github.com/bkeepers/dotenv
   gem 'dotenv-rails'
@@ -190,3 +183,5 @@ group :linux do
   gem 'rb-inotify'
   gem 'libnotify'
 end
+
+gem 'rack-rewrite'

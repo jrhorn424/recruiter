@@ -73,13 +73,13 @@ Recruiter::Application.configure do
   config.action_mailer.default :charset => "utf-8"
 
   config.action_mailer.smtp_settings = {
-    address: "smtp.mandrillapp.com",
-    port: 587,
-    domain: ENV['DOMAIN_FOR_MAIL'],
-    authentication: "plain",
+    address:              "smtp.mandrillapp.com",
+    port:                 587,
+    user_name:            ENV['MANDRILL_USERNAME'],
+    password:             ENV['MANDRILL_APIKEY'],
+    domain:               ENV['DOMAIN_FOR_MAIL'],
+    authentication:       "plain",
     enable_starttls_auto: true,
-    user_name: ENV['MANDRILL_USERNAME'],
-    password: ENV['MANDRILL_APIKEY']
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

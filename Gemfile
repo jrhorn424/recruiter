@@ -42,6 +42,12 @@ gem 'friendly_id', '~> 5.0.0' # slugs
 
 # https://github.com/airblade/paper_trail
 gem 'paper_trail', '~> 3.0.0'
+
+
+# https://github.com/newrelic/rpm
+gem 'newrelic_rpm'
+# https://github.com/kch/rack-timeout
+gem 'rack-timeout'
 ##
 
 ##
@@ -79,7 +85,7 @@ gem 'authority'
 ##
 
 ##
-# Utitlities
+# Utilities
 ##
 
 # https://github.com/collectiveidea/delayed_job
@@ -92,12 +98,6 @@ gem 'delayed_job_active_record'
 # https://github.com/mhfs/devise-async
 gem 'devise-async' # send e-mails in background
 
-# https://github.com/matthuhiggins/foreigner
-gem 'foreigner'
-
-# https://github.com/binarylogic/settingslogic
-gem 'settingslogic' # manage application configuration, useful for whitelabeling
-
 # https://github.com/schneems/maildown
 gem 'maildown'
 
@@ -108,12 +108,6 @@ gem 'mail_view'
 ##
 
 group :development do
-  # http://nadarei.co/mina/
-  gem 'mina',     github: "nadarei/mina",  :require => false # deployment
-
-  # https://github.com/adie/mina-scp
-  gem 'mina-scp', github: "adie/mina-scp", :require => false
-
   # https://github.com/evrone/quiet_assets
   gem 'quiet_assets' # make logs a little more readable
 
@@ -148,9 +142,6 @@ group :development do
 end
 
 group :development, :test do
-  # https://github.com/bkeepers/dotenv
-  gem 'dotenv-rails'
-
   # https://github.com/rspec/rspec-rails
   gem 'rspec-rails'
 

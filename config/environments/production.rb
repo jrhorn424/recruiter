@@ -73,15 +73,16 @@ Recruiter::Application.configure do
   # config.action_mailer.raise_delivery_errors = false
   # config.action_mailer.default :charset => "utf-8"
 
-  # config.action_mailer.smtp_settings = {
-  #   address: "smtp.mandrillapp.com",
-  #   port: 587,
-  #   domain: "ices-experiments.org",
-  #   authentication: "plain",
-  #   enable_starttls_auto: true,
-  #   user_name: Settings.mandrill_user,
-  #   password: Settings.mandrill_password
-  # }
+  ActionMailer::Base.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              "smtp.mandrillapp.com",
+    port:                 587,
+    user_name:            ENV['MANDRILL_USERNAME'],
+    password:             ENV['MANDRILL_APIKEY'],
+    domain:               ENV['DOMAIN_FOR_MAIL'],
+    authentication:       "plain",
+    enable_starttls_auto: true,
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found).

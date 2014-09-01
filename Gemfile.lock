@@ -148,6 +148,8 @@ GEM
     execjs (2.0.2)
     fastercsv (1.5.5)
     ffi (1.9.3)
+    foreigner (1.6.1)
+      activerecord (>= 3.0.0)
     formatador (0.2.4)
     friendly_id (5.0.3)
       activerecord (>= 4.0.0)
@@ -214,7 +216,6 @@ GEM
     mini_portile (0.5.3)
     minitest (5.4.1)
     multi_json (1.10.1)
-    newrelic_rpm (3.8.0.218)
     nio4r (1.0.0)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
@@ -291,6 +292,7 @@ GEM
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0)
+    settingslogic (2.0.9)
     sexp_processor (4.4.3)
     slim (2.0.2)
       temple (~> 0.6.6)
@@ -428,6 +430,7 @@ DEPENDENCIES
   devise (~> 3.1.0)
   devise-async
   dotenv-rails
+  foreigner
   friendly_id (~> 5.0.0)
   guard-bundler
   guard-delayed!
@@ -442,7 +445,6 @@ DEPENDENCIES
   libnotify
   mail_view
   maildown
-  newrelic_rpm
   paper_trail (~> 3.0.0)
   pg
   quiet_assets
@@ -458,6 +460,7 @@ DEPENDENCIES
   rspec-rails
   sass-rails (~> 4.0.3)
   seed-fu!
+  settingslogic
   slim-rails
   social-share-button
   spork-rails

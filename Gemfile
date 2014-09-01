@@ -113,8 +113,6 @@ gem 'devise-async' # send e-mails in background
 
 # https://github.com/matthuhiggins/foreigner
 gem 'foreigner'
-# https://github.com/binarylogic/settingslogic
-gem 'settingslogic' # manage application configuration, useful for whitelabeling
 
 # https://github.com/schneems/maildown
 gem 'maildown'
@@ -160,9 +158,6 @@ group :development do
 end
 
 group :development, :test do
-  # https://github.com/bkeepers/dotenv
-  gem 'dotenv-rails'
-
   # https://github.com/rspec/rspec-rails
   gem 'rspec-rails'
 

@@ -1,14 +1,16 @@
 class ExperimentsController < InheritedResources::Base
   before_action :authenticate_user!
+  before_action :raise_if_not_experimenter
   actions :all
   custom_actions :collection => [:assigned, :calendar], :resource => [:invite]
-  respond_to :js, :only => [:destroy, :update, :calendar]
+  respond_to :json, :only => [:destroy, :update]
 
   def permitted_params
     params.permit(experiment: [
         :name,
         :description,
         :type,
+        :reward,
         :default_invitation,
         :finished,
         {category_ids: []}
@@ -21,13 +23,13 @@ class ExperimentsController < InheritedResources::Base
     create!
   end
   def index
-    @experiments = Experiment.where(creator: current_user, finished: false).order("created_at DESC")
+    @experiments = Experiment.where(creator: current_user).order("created_at DESC")
     @filter_title = 'show all'
     @filter_url = experiments_all_path
     index!
   end
   def all
-    @experiments = Experiment.all.where(finished: false).order("created_at DESC")
+    @experiments = Experiment.all.order("created_at DESC")
     @filter_title = 'show only my'
     @filter_url = experiments_path
     render 'index'
@@ -40,7 +42,14 @@ class ExperimentsController < InheritedResources::Base
     @experiment = Experiment.find(params[:experiment_id])
   end
   def send_invite
-
+    experiment = Experiment.find(params[:experiment_id])
+    stack = experiment.assignments.where(invited: false).take(params[:amount])
+    stack.each do |assignment|
+      UserMailer.delay.invitation(assignment.user, experiment)
+    end
+    stack.each {|r| r.update_attributes(:invited => true)}
+    flash[:success] = 'Mailing has been started'
+    redirect_to :back
   end
   def calendar
     events = Session
@@ -49,7 +58,7 @@ class ExperimentsController < InheritedResources::Base
     respond_to do |format|
       format.json {
         render :json => events.to_json(
-            :only => [:start_time, :end_time, :duration, :finished],
+            :only => [:start_time, :end_time, :duration, :finished, :id, :required_subjects, :registered_subjects],
             :include => {
                 :experiment => {
                     :only => [:name],

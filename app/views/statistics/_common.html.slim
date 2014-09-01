@@ -1,0 +1,25 @@
+- participated = Registration.select(:user_id).distinct.where(participated: true).count
+.row
+  strong
+    = 'Subjects'
+  br
+  .small
+    = pluralize(Subject.count, 'subject')
+.row
+  strong
+    = 'Active'
+  br
+  .small
+    = pluralize(Subject.active.count, 'subject')
+.row
+  strong
+    = 'Participated'
+  br
+  .small
+    = pluralize(participated, 'subject')
+.row
+  strong
+    = 'Average participation'
+  br
+  .small
+    = pluralize((Registration.where(participated: true).count / participated if participated != 0), 'subject')

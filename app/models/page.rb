@@ -3,8 +3,9 @@ class Page < ActiveRecord::Base
 
   extend FriendlyId
   friendly_id :name, use: :slugged
+  alias_attribute :value, :content
 
-  validates_presence_of :name, :slug, :content
+  validates_presence_of :name
   validates_uniqueness_of :slug
 
   def self.content_by_slug(slug)

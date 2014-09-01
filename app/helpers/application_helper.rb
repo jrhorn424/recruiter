@@ -8,6 +8,11 @@ module ApplicationHelper
     content_for(:head) { javascript_include_tag(*files) }
   end
 
+  def markdown_editor(object, field, opts = {})
+    obj_name = object.class.name.downcase
+    text_area_tag "#{obj_name}[#{field}]", object.send(field).to_s, class: 'markdown',
+                  data: {savable: opts[:savable].nil? ? true : opts[:savable], object: obj_name, field: field, url: url_for(object)}
+  end
   def field_class(resource, field_name)
     if resource.errors[field_name]
       return "error".html_safe
@@ -15,15 +20,14 @@ module ApplicationHelper
       return "".html_safe
     end
   end
-
   # Devise isn't quite ready for twitter bootstrap. Here we convert the flash
   # messages keys to the types expected by Bootstrap 3.0.
   def flash_class(level)
     case level
-    when :notice then "alert alert-info"
-    when :success then "alert alert-success"
-    when :error then "alert alert-danger"
-    when :alert then "alert alert-danger"
+    when 'notice' then "alert alert-info"
+    when 'success' then "alert alert-success"
+    when 'error' then "alert alert-danger"
+    when 'alert' then "alert alert-danger"
     end
   end
   ###

@@ -11,12 +11,14 @@
 // about supported directives.
 //
 //= require modernizr/modernizr
+//= require maelstorm
 //= require jquery
 //= require jquery_ujs
-//= require jquery.ui.all
 //= require best_in_place
 //= require bootstrap
 //= require bootstrap-inputmask
+//= require bootstrap-markdown
+//= require social-share-button
 //= require_tree .
 
 $(document).ready(function() {
@@ -26,9 +28,53 @@ $(document).ready(function() {
     });
 });
 $(document).ready(function() {
+    $("[data-href]").click(function() {
+        window.document.location = $(this).data("href");
+    });
     $(".best_in_place").best_in_place();
     $('.checkbox').checkbox();
     $('.selectpicker').selectpicker();
+    $("textarea.markdown").each(function(i,el){
+        $(el).markdown({
+            savable: $(el).data('savable'),
+            onSave: function(e) {
+                var url = e.$textarea.data('url');
+                var name = e.$textarea.attr('name');
+                var field = e.$textarea.data('field');
+                $.ajax({
+                    method: 'post',
+                    url: url,
+                    data: Maelstorm.prepareParam(name, e.getContent()),
+                    dataType: 'json'
+                });
+            }
+        })
+        if($(el).closest('form').length > 0){
+            $(el).attr('form', $(el).closest('form').attr('id'));
+        }
+    });
+    $(".add-new-record").bind('ajax:success', function(){window.document.location.reload();});
+    $('.registration-selector').on(
+        "webkitAnimationEnd oanimationend msAnimationEnd animationend",
+        function() {
+            $(this).removeClass("success-animation");
+        }
+    );
+    $('.registration-selector').change(function(event){
+        var user = $(event.target).data('user');
+        var experiment = $(event.target).data('experiment');
+        var session = $(event.target).find('option:selected').val();
+        var that = this;
+        $.ajax({
+            method: 'POST',
+            url: '/assignments/' + user + ',' + experiment,
+            data: {assignment: {current_session: session}},
+            dataType: 'json'
+        })
+            .done(function(){
+                $(that).addClass('success-animation');
+            });
+    })
     $('#calendar').fullCalendar({
         header:{
             left:   'title',
@@ -51,11 +97,12 @@ $(document).ready(function() {
                         events.push({
                             title: this['experiment']['name'] + ' by ' +
                                 this['experiment']['creator']['last_name'] + ' ' + this['experiment']['creator']['first_name'] +
-                                ' in ' + this['lab']['location'],
+                                ' in ' + this['lab']['location'] + ', subjects: ' + this['registered_subjects'] + '/' + this['required_subjects'],
                             start: this['start_time'],
                             end: this['end_time'],
                             allDay: false,
-                            color: this['finished'] ? '' : 'green'
+                            color: this['finished'] ? '' : 'green',
+                            url: '/sessions/' + this['id'] + '/online'
                         });
                     });
                     callback(events);
@@ -71,18 +118,4 @@ $(document).ready(function() {
     })
 
 });
-$(document).ready(function($) {
-    $("[data-href]").click(function() {
-        window.document.location = $(this).data("href");
-    });
-    $('.save').click(function(event){
-        event.preventDefault();
-        $('.save-row').submit();
-    })
-    $('.registration-selector').change(function(event){
-        var user = $(event.target).data('user');
-        var experiment = $(event.target).data('experiment');
-        var session = $(event.target).find('option:selected').val();
-        $.post('/assignments/' + user + ',' + experiment, {current_session: session})
-    })
-});
+

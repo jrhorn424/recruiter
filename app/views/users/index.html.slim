@@ -1,36 +1,42 @@
+= render 'invitation_modal'
+= render 'deactivate_modal'
+= render 'reset_modal'
 .row
-  .col-sm-8
-    - @users.each_with_index do | user, i |
-      = form_for(user.becomes(User), html: {method: :put, class: "save-row"}, url: user_path(user), remote: true, namespace: "m_#{user.id}") do |f|
-        .row class = "#{i != 0 ? 'spacer-top-10' : ''}"
-          .col-sm-3
-            = link_to user.name, user.becomes(User)
-            br
-            small
-              = user.email
-          .col-sm-3
-              span
-                = f.radio_button :type, 'Administrator'
-                = f.label :type, nil, :value => 'Administrator', class: "spacer-bot-neg-5"
-                  = 'Administrator'
-                br
-                = f.radio_button :type, 'Experimenter'
-                = f.label :type, nil, :value => 'Experimenter', class: "spacer-bot-neg-5"
-                  = 'Experimenter'
-                br
-                = f.radio_button :type, 'Subject'
-                = f.label :type, nil, :value => 'Subject', class: 'danger'
-                  = 'Subject'
-  .col-sm-4.well
-    b
-      | Statistics
-    br
-      - participated_number = Registration.select(:user_id).distinct.where(participated: true).count
-      div
-        = "Subjects: #{Subject.count}"
-      div
-        = "Participated subjects: #{participated_number}"
-      div
-        = "Average participation: #{Registration.where(participated: true).count / participated_number}"
-.pull-right
-  = link_to "Save", "#", remote: true,  class: 'btn btn-primary spacer-top-10 save'
+  .col-sm-6
+    = form_tag users_path, method: :get, class: "navbar-form", role: "search"
+      .input-group
+        = text_field_tag :q, nil, class: "form-control", placeholder: "Search"
+        .input-group-btn
+          button class="btn btn-default" type="submit"
+            span class="glyphicon glyphicon-search"
+  .col-sm-6
+    .pull-right
+      = button_tag 'Send invitations', class: 'btn btn-primary spacer-right-1', data: {toggle: 'modal', target: '#invitation-modal'}
+      = button_tag 'Reset passwords', class: 'btn btn-danger spacer-right-1', data: {toggle: 'modal', target: '#reset-modal'}
+      = button_tag 'Deactivate users', class: 'btn btn-danger spacer-right-1', data: {toggle: 'modal', target: '#deactivate-modal'}
+    .clearfix
+.row.spacer-top-2
+  .col-sm-9
+    table.table.table-striped
+      tbody
+        - @users.each do | user |
+          tr
+            td
+              = link_to user.name, user.becomes(User)
+              br
+              small
+                = user.email
+            td
+              = link_to 'Reset password', user_reset_path(user)
+              .pull-right.lead
+                = "#{user.type}"
+  .col-sm-3
+    .panel.panel-default
+      .panel-heading
+        h3.panel-title
+          | Stats
+      .panel-body
+        .spacer-left-1
+          = render 'statistics/common'
+.row.text-center
+  = will_paginate @users

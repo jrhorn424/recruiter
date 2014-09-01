@@ -1,5 +1,6 @@
 class RegistrationsController < InheritedResources::Base
-  respond_to :js, :only => [:create, :update]
+  respond_to :js, :only => [:create]
+  respond_to :json, :only => [:update]
   actions :create, :update
   def create
     @session = Session.find(params[:session_id])
@@ -17,6 +18,10 @@ class RegistrationsController < InheritedResources::Base
         create!
       end
     end
+  end
+  def update
+    @registration = Registration.find(params[:id].split(','))
+    update!
   end
 
   def permitted_params

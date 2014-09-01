@@ -1,25 +1,65 @@
 class UsersController < InheritedResources::Base
-  before_action :authenticate_user!
-  before_action :raise_if_not_admin, only: [:unassign, :unassign_all, :assigned, :register, :unregister]
+
+  before_action :authenticate_user!, :except => ['password_change_action']
+  before_action :raise_if_not_admin, only: [:invite_users, :deactivate, :unassign, :unassign_all, :assigned, :register, :unregister]
   before_action :raise_if_not_experimenter, only: [:assign, :remained]
 
-  respond_to :js, :only => [:add, :update, :search, :unregister, :unassign]
-
   actions :all
-  custom_actions :resource => [:search, :assigned, :unassign, :unassign_all, :register, :unregister]
+  custom_actions :resource => [:assigned, :unassign, :unassign_all, :register, :unregister], :collection => [:deactivate, :invite_users]
+
+  respond_to :js, :only => [:add, :unregister, :unassign]
+  respond_to :json, :only => [:update, :invite_users]
 
   def index
-    @users = User.where.not(id: current_user.id).order("type ASC")
+    @users = User.where.not(id: current_user.id).order("type ASC, last_name ASC, first_name ASC")
+    if params[:q].present?
+      @users = @users.find_by_query(params[:q])
+    end
+    @users = @users.paginate(:page => params[:page])
     index!
   end
 
-  def search
-    @users = User.find_by_cred(params[:user][:cred])
+  def invite_users
+    emails = params[:emails].strip.split(/\s+/)
+    emails = emails - Subject.all.pluck(:email)
+    email_text = params[:email][:value]
+    emails.each do |email|
+      UserMailer.delay.invite_to_register(email, email_text)
+    end
+    redirect_to users_path
+  end
+  def reset_user
+    user = User.find(params[:id])
+    raw, enc = Devise.token_generator.generate(user.class, :reset_password_token)
+    user.reset_password_token   = enc
+    user.reset_password_sent_at = Time.now.utc
+    user.save(:validate => false)
+    UserMailer.delay.reset_password_instructions(user, raw)
+    redirect_to users_path
+  end
+  def reset_users
+    users = User.where("encrypted_password = ''")
+
+    users.each do |user|
+      raw, enc = Devise.token_generator.generate(user.class, :reset_password_token)
+      user.reset_password_token   = enc
+      user.reset_password_sent_at = Time.now.utc
+      user.save(:validate => false)
+      UserMailer.delay.reset_password_instructions(user, raw)
+    end
+    redirect_to users_path
+  end
+  def deactivate
+    Subject.update_all(active: false)
+    email_text = params[:email][:value]
+    Subject.all.each do |user|
+      UserMailer.delay.deactivation(user, email_text)
+    end
+    redirect_to users_path
   end
 
   def assigned
     @experiment = Experiment.find(params[:experiment_id])
-    render 'assigned'
   end
 
   def unassign
@@ -62,14 +102,28 @@ class UsersController < InheritedResources::Base
     end
     attendance = processed_params["attendance"]
     processed_params.delete "attendance"
+
+    restricted_subjects = Assignment.where(experiment_id: @experiment.id).pluck(:user_id)
+    restricted_subjects |= Subject.inactive.pluck(:id)
+
+    if params[:never_been]
+      restricted_subjects |= Registration.all.pluck(:user_id)
+    elsif params[:never_been_similar]
+      same = []
+      @experiment.categories.each do |f|
+        same |= f.experiments.pluck(:id)
+      end
+      sessions_with_same_categories = Session.where(experiment_id: same)
+      restricted_subjects |= Registration.where(session_id: sessions_with_same_categories).pluck(:user_id)
+    end
     @subjects = Subject
+    .profile_filled
+    .active
     .joins("LEFT OUTER JOIN (select user_id, count(*) as registrations_count from registrations group by user_id) r1 on (r1.user_id = users.id)")
     .joins("LEFT OUTER JOIN (select user_id, count(*) as shown_up_count from registrations where registrations.shown_up = true group by user_id) r2 on (r2.user_id = users.id)")
+    .where("COALESCE((r2.shown_up_count / r1.registrations_count),100) BETWEEN #{attendance.min} and #{attendance.max}")
     .where(processed_params)
-    .where.not(id: Assignment.where(experiment_id: @experiment.id).pluck(:user_id))
-    .where("(#{search_params[:never_been].nil?} or r1.registrations_count = 0)")
-    .where("(#{search_params[:never_been_similar].nil?} or 't'")
-    .where("COALESCE((r2.shown_up_count / r1.registrations_count),100) BETWEEN #{attendance.min} and #{attendance.max}").to_a
+    .where.not(id: restricted_subjects).to_a
     @subjects.shuffle!(random: Random.new(1))
     if @subjects.count >= search_params[:required_subjects].to_i
       @assigned_count = search_params[:required_subjects].to_i
@@ -93,10 +147,8 @@ class UsersController < InheritedResources::Base
   end
 
   def update
-    @user = User.find(params[:id])
-    @generic_user = @user.becomes(User)
-    @generic_user.update(permitted_params[:user])
-    @generic_user.save!
+    update!
+    @user.save :validate => false
   end
 
   def permitted_params

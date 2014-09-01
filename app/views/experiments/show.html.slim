@@ -1,18 +1,24 @@
 .tabbable
   ul.nav.nav-tabs
     li.active
-      a href="#general" data-toggle="tab"
-        |  General
-    li
       a href="#sessions" data-toggle="tab"
         |  Sessions
     li
-      a href="#sp" data-toggle="tab"
-        |  Subject pool
-  .tab-content
-    #general.tab-pane.active
-      = render 'general'
-    #sessions.tab-pane
+      a href="#pool" data-toggle="tab"
+        |  Pool
+    li
+      a href="#statistics" data-toggle="tab"
+        |  Statistics
+    li
+      a href="#settings" data-toggle="tab"
+        |  Settings
+  .tab-content.spacer-top-1
+    #sessions.tab-pane.active
       = render 'sessions'
-    #sp.tab-pane
-      = render 'subject_pool'
+    #pool.tab-pane
+      = render 'pool'
+    #statistics.tab-pane
+      = render 'statistics/experiment'
+      = link_to 'Send invitations', experiment_invite_path(@experiment), class: "btn btn-primary pull-right"
+    #settings.tab-pane
+      = render 'settings'

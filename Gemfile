@@ -57,7 +57,7 @@ gem 'wkhtmltopdf-binary'
 gem 'wicked_pdf'
 
 # https://github.com/airblade/paper_trail
-gem 'paper_trail'
+gem 'paper_trail', '~> 3.0.0'
 ##
 
 ##
